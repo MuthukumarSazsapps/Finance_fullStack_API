@@ -1,0 +1,7 @@
+{
+  "responseHandler": {
+    "prefix": "responseHandler",
+    "body": ["responseHandler({ req, res,data: $1, httpCode: $2, });"],
+    "description": "Log output to console"
+  }
+}

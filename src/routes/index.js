@@ -1,0 +1,43 @@
+import subscribers from './subscribers.js';
+import menu from './menu.js';
+import login from './login.js';
+import users from './users.js';
+import submenu from './submenu.js';
+import city from './city.js';
+import userinfo from './userinfo.js';
+import state from './state.js';
+import pageCompoBox from './pageCompoBox.js';
+import subscribersCity from './subscribersCity.js';
+import branch from './branch.js';
+import agent from './agent.js';
+import showRoom from './showRoom.js';
+import customer from './customer.js';
+import vehicleType from './vehicleType.js';
+import loan from './loan.js';
+import ledgerGroup from './ledgerGroup.js';
+import ledger from './ledger.js';
+import report from './report.js';
+
+const routes = app => {
+  app.use('/', login);
+  app.use('/userinfo', userinfo);
+  app.use('/subscribers', subscribers);
+  app.use('/menu', menu);
+  app.use('/users', users);
+  app.use('/submenu', submenu);
+  app.use('/city', city);
+  app.use('/subcity', subscribersCity);
+  app.use('/state', state);
+  app.use('/options', pageCompoBox);
+  app.use('/branch', branch);
+  app.use('/agent', agent);
+  app.use('/showroom', showRoom);
+  app.use('/customer', customer);
+  app.use('/vehicle', vehicleType);
+  app.use('/loan', loan);
+  app.use('/ledgerGroup', ledgerGroup);
+  app.use('/ledger', ledger);
+  app.use('/report', report);
+};
+
+export default routes;

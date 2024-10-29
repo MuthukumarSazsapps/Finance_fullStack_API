@@ -1,0 +1,373 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "SAZS Finance API",
+    "description": "API documentation for managing subscribers"
+  },
+  "basePath": "/",
+  "paths": {
+    "/subscribers": {
+      "post": {
+        "summary": "Create a new subscriber",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubscriberRequestBody"
+            },
+            "example": {
+              "subscriberCode": "S123",
+              "subscriberName": "Example Subscriber",
+              "shortName": "ES",
+              "pointOfContact": "John Doe",
+              "logoUrl": "http://example.com/logo.png",
+              "cityId": 1,
+              "gstNo": "GST123456",
+              "isActive": true,
+              "startDate": "2023-01-01",
+              "endDate": "2023-12-31"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Subscriber created Successfully",
+            "schema": {
+              "$ref": "#/definitions/SubscriberResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Subscriber created Successfully",
+                "data": {
+                  "subscriberCode": "S123",
+                  "subscriberName": "Example Subscriber",
+                  "shortName": "ES",
+                  "pointOfContact": "John Doe",
+                  "logoUrl": "http://example.com/logo.png",
+                  "cityId": 1,
+                  "gstNo": "GST123456",
+                  "isActive": true,
+                  "startDate": "2023-01-01",
+                  "endDate": "2023-12-31"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An error occurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "examples": {
+              "application/json": {
+                "error": "Internal Server Error"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a list of subscribers",
+        "responses": {
+          "200": {
+            "description": "List of subscribers retrieved Successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SubscriberResponse"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "subscriberCode": "S123",
+                  "subscriberName": "Example Subscriber",
+                  "shortName": "ES",
+                  "pointOfContact": "John Doe",
+                  "logoUrl": "http://example.com/logo.png",
+                  "cityId": 1,
+                  "gstNo": "GST123456",
+                  "isActive": true,
+                  "startDate": "2023-01-01",
+                  "endDate": "2023-12-31"
+                }
+              ]
+            }
+          },
+          "500": {
+            "description": "An error occurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "examples": {
+              "application/json": {
+                "error": "Internal Server Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subscribers/{id}": {
+      "get": {
+        "summary": "Get a subscriber by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscriber retrieved Successfully",
+            "schema": {
+              "$ref": "#/definitions/SubscriberResponse"
+            },
+            "examples": {
+              "application/json": {
+                "subscriberCode": "S123",
+                "subscriberName": "Example Subscriber",
+                "shortName": "ES",
+                "pointOfContact": "John Doe",
+                "logoUrl": "http://example.com/logo.png",
+                "cityId": 1,
+                "gstNo": "GST123456",
+                "isActive": true,
+                "startDate": "2023-01-01",
+                "endDate": "2023-12-31"
+              }
+            }
+          },
+          "404": {
+            "description": "Subscriber not found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Subscriber not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Error fetching subscriber",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "examples": {
+              "application/json": {
+                "error": "Internal Server Error"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a subscriber by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubscriberRequestBody"
+            },
+            "example": {
+              "subscriberName": "Updated Subscriber",
+              "shortName": "US",
+              "pointOfContact": "Jane Doe",
+              "logoUrl": "http://example.com/updated-logo.png",
+              "cityId": 2,
+              "gstNo": "GST654321",
+              "isActive": true,
+              "startDate": "2023-01-01",
+              "endDate": "2023-12-31"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscriber updated Successfully",
+            "schema": {
+              "$ref": "#/definitions/SubscriberResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Subscriber updated Successfully",
+                "data": {
+                  "subscriberCode": "S123",
+                  "subscriberName": "Updated Subscriber",
+                  "shortName": "US",
+                  "pointOfContact": "Jane Doe",
+                  "logoUrl": "http://example.com/updated-logo.png",
+                  "cityId": 2,
+                  "gstNo": "GST654321",
+                  "isActive": true,
+                  "startDate": "2023-01-01",
+                  "endDate": "2023-12-31"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subscriber not found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Subscriber not found"
+              }
+            }
+          },
+          "500": {
+            "description": "An error occurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "examples": {
+              "application/json": {
+                "error": "Internal Server Error"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a subscriber by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscriber Deleted Successfully",
+            "schema": {
+              "$ref": "#/definitions/SubscriberResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Subscriber Deleted Successfully",
+                "data": {
+                  "subscriberCode": "S123",
+                  "subscriberName": "Updated Subscriber",
+                  "shortName": "US",
+                  "pointOfContact": "Jane Doe",
+                  "logoUrl": "http://example.com/updated-logo.png",
+                  "cityId": 2,
+                  "gstNo": "GST654321",
+                  "isActive": true,
+                  "startDate": "2023-01-01",
+                  "endDate": "2023-12-31"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subscriber not found",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Subscriber not found"
+              }
+            }
+          },
+          "500": {
+            "description": "An error occurred",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "examples": {
+              "application/json": {
+                "error": "Internal Server Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SubscriberRequestBody": {
+      "type": "object",
+      "properties": {
+        "subscriberCode": {
+          "type": "string"
+        },
+        "subscriberName": {
+          "type": "string"
+        },
+        "shortName": {
+          "type": "string"
+        },
+        "pointOfContact": {
+          "type": "string"
+        },
+        "logoUrl": {
+          "type": "string"
+        },
+        "cityId": {
+          "type": "integer"
+        },
+        "gstNo": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "SubscriberResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/SubscriberRequestBody"
+        }
+      }
+    },
+    "NotFound": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
