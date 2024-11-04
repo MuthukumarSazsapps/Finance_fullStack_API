@@ -75,7 +75,7 @@ const createLoan = async (req, res, next) => {
       .input('RegisterNumber', RegisterNumber)
       .input('ShowRoomId', ShowRoomId)
       .input('MadeYear', MadeYear)
-      .input('InsuranceDate', InsuranceDate ? new Date(Insurance) : null)
+      .input('InsuranceDate', InsuranceDate ? new Date(InsuranceDate) : null)
       .input('FCDate', new Date(FCDate))
       .input('PermitDate', new Date(PermitDate))
       .input('OriginalRC', OriginalRC)
@@ -98,7 +98,6 @@ const createLoan = async (req, res, next) => {
       .input('VehicleDocsURL', null)
       .input('CreatedBy', CreatedBy)
       .input('ModifiedBy', null)
-      .input('IsActive', IsActive)
       .execute('SazsFinance_Pr_LoanDetails');
     await transaction.commit();
     req.resultMessage = 'Loan created Successfully';
@@ -106,13 +105,13 @@ const createLoan = async (req, res, next) => {
     req.ApiCall = 'Loan';
     next();
   } catch (error) {
-    console.log(error);
+    console.log('error', error);
     await transaction.rollback();
     if (error.code === 'EREQUEST') {
       responseHandler({
         req,
         res,
-        data: { error: 'An error occurred' },
+        data: { error: error },
         httpCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
       });
     }
