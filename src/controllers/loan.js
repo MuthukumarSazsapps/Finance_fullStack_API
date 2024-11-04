@@ -166,7 +166,7 @@ const updateLoan = async (req, res, next) => {
       .input('RegisterNumber', RegisterNumber)
       .input('ShowRoomId', ShowRoomId)
       .input('MadeYear', MadeYear)
-      .input('InsuranceDate', InsuranceDate ? new Date(Insurance) : null)
+      .input('InsuranceDate', InsuranceDate ? new Date(InsuranceDate) : null)
       .input('FCDate', new Date(FCDate))
       .input('PermitDate', new Date(PermitDate))
       .input('OriginalRC', OriginalRC)
@@ -189,7 +189,6 @@ const updateLoan = async (req, res, next) => {
       .input('VehicleDocsURL', null)
       .input('CreatedBy', null)
       .input('ModifiedBy', ModifiedBy)
-      .input('IsActive', IsActive)
       .execute('SazsFinance_Pr_LoanDetails');
     await transaction.commit();
     req.resultMessage = 'Loan updated Successfully';
