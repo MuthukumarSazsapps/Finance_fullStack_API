@@ -40,6 +40,7 @@ const getAllCustomers = async (req, res) => {
       .input('CustomerDOB', null)
       .input('CustomerGender', null)
       .input('CustomerAddress', null)
+      .input('CustomerProfession', null)
       .input('CustomerCity', null)
       .input('CustomerAADHAAR', null)
       .input('CustomerDrivingLicenseNo', null)
@@ -86,6 +87,7 @@ const createCustomer = async (req, res, next) => {
     CustomerDOB,
     CustomerGender,
     CustomerAddress,
+    CustomerProfession,
     CustomerCity,
     CustomerAADHAAR,
     CustomerDrivingLicenseNo,
@@ -119,6 +121,7 @@ const createCustomer = async (req, res, next) => {
       .input('CustomerDOB', CustomerDOB ? new Date(CustomerDOB) : ' ')
       .input('CustomerGender', CustomerGender)
       .input('CustomerAddress', CustomerAddress)
+      .input('CustomerProfession', CustomerProfession)
       .input('CustomerCity', CustomerCity)
       .input('CustomerAADHAAR', CustomerAADHAAR)
       .input('CustomerDrivingLicenseNo', CustomerDrivingLicenseNo)
@@ -169,6 +172,7 @@ const updateCustomer = async (req, res, next) => {
     CustomerDOB,
     CustomerGender,
     CustomerAddress,
+    CustomerProfession,
     CustomerCity,
     CustomerAADHAAR,
     CustomerDrivingLicenseNo,
@@ -203,6 +207,7 @@ const updateCustomer = async (req, res, next) => {
       .input('CustomerDOB', CustomerDOB ? new Date(CustomerDOB) : ' ')
       .input('CustomerGender', CustomerGender)
       .input('CustomerAddress', CustomerAddress)
+      .input('CustomerProfession', CustomerProfession)
       .input('CustomerCity', CustomerCity)
       .input('CustomerAADHAAR', CustomerAADHAAR)
       .input('CustomerDrivingLicenseNo', CustomerDrivingLicenseNo)
