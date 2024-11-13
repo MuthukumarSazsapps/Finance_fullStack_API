@@ -115,7 +115,7 @@ const PendingRemarksUpdate = async (req, res, next) => {
       .input('LoanId', LoanId)
       .input('Installment', MaxInstallment)
       .input('Remarks', Remarks)
-      .execute('SazsFinance_Pr_PendingReport');
+      .execute('SazsFinance_Pr_Report');
     await transaction.commit();
     req.resultMessage = 'Pending Remarks updated Successfully';
     req.Event = 'Update';
