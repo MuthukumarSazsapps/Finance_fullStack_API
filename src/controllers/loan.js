@@ -9,7 +9,7 @@ const getAllLoans = async (req, res) => {
     if (BranchId && SubscriberId) {
       const request = pool.request();
       const result = await request
-        .input('Flag', 2)
+        .input('Flag', 5)
         .input('LoanId', null)
         .input('SubscriberId', SubscriberId)
         .input('BranchId', BranchId)

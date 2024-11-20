@@ -17,7 +17,7 @@ import loan from './loan.js';
 import ledgerGroup from './ledgerGroup.js';
 import ledger from './ledger.js';
 import report from './report.js';
-
+import enumMaster from './enumMaster.js';
 const routes = app => {
   app.use('/', login);
   app.use('/userinfo', userinfo);
@@ -38,6 +38,7 @@ const routes = app => {
   app.use('/ledgerGroup', ledgerGroup);
   app.use('/ledger', ledger);
   app.use('/report', report);
+  app.use('/enumMaster', enumMaster);
 };
 
 export default routes;
