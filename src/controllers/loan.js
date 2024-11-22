@@ -166,7 +166,10 @@ const updateLoan = async (req, res, next) => {
       .input('RegisterNumber', RegisterNumber)
       .input('ShowRoomId', ShowRoomId)
       .input('MadeYear', MadeYear)
-      .input('InsuranceDate', InsuranceDate ? new Date(InsuranceDate) : null)
+      .input(
+        'InsuranceDate',
+        InsuranceDate && InsuranceDate !== 'null' ? new Date(InsuranceDate) : null,
+      )
       .input('FCDate', FCDate ? new Date(FCDate) : ' ')
       .input('PermitDate', PermitDate ? new Date(PermitDate) : ' ')
       .input('OriginalRC', OriginalRC)
