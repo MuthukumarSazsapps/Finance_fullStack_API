@@ -25,6 +25,28 @@ const getPendingReport = async (req, res) => {
     });
   }
 };
+const getPendingCapitalReport = async (req, res) => {
+  const { SubscriberId, BranchId } = req.body;
+  try {
+    const result = await pool
+      .request()
+      .input('Flag', 2)
+      .input('SubscriberId', SubscriberId)
+      .input('BranchId', BranchId)
+      .input('LoanId', null)
+      .input('Installment', null)
+      .input('Remarks', null)
+      .execute('SazsFinance_Pr_Report');
+    responseHandler({ req, res, data: result.recordset, httpCode: HttpStatusCode.OK });
+  } catch (error) {
+    responseHandler({
+      req,
+      res,
+      data: { message: 'Error fetching Pending Records', error },
+      httpCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+    });
+  }
+};
 
 const getDefaultReport = async (req, res) => {
   const { SubscriberId, BranchId } = req.body;
@@ -135,6 +157,7 @@ const PendingRemarksUpdate = async (req, res, next) => {
 
 export default {
   getPendingReport,
+  getPendingCapitalReport,
   PendingRemarksUpdate,
   PendingDocsUpdate,
   PendingDocuments,
