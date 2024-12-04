@@ -21,7 +21,7 @@ const getAllLedger = async (req, res) => {
       .input('ModifiedBy', null)
       .input('IsActive', null)
       .execute('Sazs_Pr_Ledger');
-    responseHandler({ req, res, data: result.recordset, httpCode: HttpStatusCode.OK });
+    responseHandler({ req, res, data: result.recordsets, httpCode: HttpStatusCode.OK });
   } catch (error) {
     responseHandler({
       req,
