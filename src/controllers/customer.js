@@ -2,6 +2,7 @@ import responseHandler from '../utils/responseHandler.js';
 import { HttpStatusCode } from '../utils/constants.js';
 import { pool, transaction } from '../config/database.js';
 import mssql from 'mssql';
+import uploadFileToS3 from '../utils/uploadFileToS3.js';
 
 const getCustomer = async (req, res) => {
   const { CustomerId } = req.body;
@@ -78,6 +79,91 @@ const getAllCustomers = async (req, res) => {
     });
   }
 };
+// const createCustomer = async (req, res, next) => {
+//   const {
+//     SubscriberId,
+//     BranchId,
+//     CustomerName,
+//     CustomerFatherName,
+//     CustomerDOB,
+//     CustomerGender,
+//     CustomerAddress,
+//     CustomerProfession,
+//     CustomerCity,
+//     CustomerAADHAAR,
+//     CustomerDrivingLicenseNo,
+//     CustomerDrivingLicenseExpiryDate,
+//     CustomerPAN,
+//     CustomerPhoneNo,
+//     CustomerAlternatePhoneNo,
+//     GuarantorName,
+//     GuarantorFatherName,
+//     GuarantorGender,
+//     GuarantorAddress,
+//     GuarantorCity,
+//     GuarantorPhoneNo,
+//     CustomerEmail,
+//     CustomerRating,
+//     CustomerIsBlocked,
+//     CustomerIsCurrent,
+//     CreatedBy,
+//   } = req.body;
+//   const CustomerPhotoURL = req.file?.filename;
+//   try {
+//     await transaction.begin();
+//     const request = new mssql.Request(transaction);
+//     const result = await request
+//       .input('Flag', 1)
+//       .input('CustomerId', null)
+//       .input('SubscriberId', SubscriberId)
+//       .input('BranchId', BranchId)
+//       .input('CustomerName', CustomerName)
+//       .input('CustomerFatherName', CustomerFatherName)
+//       .input('CustomerDOB', CustomerDOB ? new Date(CustomerDOB) : ' ')
+//       .input('CustomerGender', CustomerGender)
+//       .input('CustomerAddress', CustomerAddress)
+//       .input('CustomerProfession', CustomerProfession)
+//       .input('CustomerCity', CustomerCity)
+//       .input('CustomerAADHAAR', CustomerAADHAAR)
+//       .input('CustomerDrivingLicenseNo', CustomerDrivingLicenseNo)
+//       .input(
+//         'CustomerDrivingLicenseExpiryDate',
+//         CustomerDrivingLicenseExpiryDate ? new Date(CustomerDrivingLicenseExpiryDate) : null,
+//       )
+//       .input('CustomerPAN', CustomerPAN)
+//       .input('CustomerPhoneNo', CustomerPhoneNo)
+//       .input('CustomerAlternatePhoneNo', CustomerAlternatePhoneNo)
+//       .input('GuarantorName', GuarantorName)
+//       .input('GuarantorFatherName', GuarantorFatherName)
+//       .input('GuarantorGender', GuarantorGender)
+//       .input('GuarantorAddress', GuarantorAddress)
+//       .input('GuarantorCity', GuarantorCity)
+//       .input('GuarantorPhoneNo', GuarantorPhoneNo)
+//       .input('CustomerEmail', CustomerEmail)
+//       .input('CustomerPhotoURL', CustomerPhotoURL)
+//       .input('CustomerRating', CustomerRating)
+//       .input('CustomerIsBlocked', CustomerIsBlocked)
+//       .input('CustomerIsCurrent', CustomerIsCurrent)
+//       .input('CreatedBy', CreatedBy)
+//       .input('ModifiedBy', null)
+//       .execute('SazsFinance_Pr_Customers');
+//     await transaction.commit();
+//     req.resultMessage = result.recordset[0].message;
+//     req.Event = 'Create';
+//     req.ApiCall = 'Customer';
+//     next();
+//   } catch (error) {
+//     console.log(error);
+//     await transaction.rollback();
+//     responseHandler({
+//       req,
+//       res,
+//       data: { error: 'An error occurred' },
+//       httpCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+//     });
+//   }
+// };
+
 const createCustomer = async (req, res, next) => {
   const {
     SubscriberId,
@@ -107,9 +193,10 @@ const createCustomer = async (req, res, next) => {
     CustomerIsCurrent,
     CreatedBy,
   } = req.body;
-  const CustomerPhotoURL = req.file?.filename;
+  const CustomerPhotoURLFile = req.file;
   try {
     await transaction.begin();
+    const CustomerPhotoURL = await uploadFileToS3(CustomerPhotoURLFile);
     const request = new mssql.Request(transaction);
     const result = await request
       .input('Flag', 1)
@@ -192,10 +279,11 @@ const updateCustomer = async (req, res, next) => {
     CustomerIsCurrent,
     ModifiedBy,
   } = req.body;
-  const CustomerPhotoURL = req.file?.filename;
+  const CustomerPhotoURLFile = req.file;
 
   try {
     await transaction.begin();
+    const CustomerPhotoURL = await uploadFileToS3(CustomerPhotoURLFile);
     const request = new mssql.Request(transaction);
     const result = await request
       .input('Flag', 2)
