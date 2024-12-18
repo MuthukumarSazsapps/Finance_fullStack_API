@@ -4,6 +4,11 @@ import { pool, transaction } from '../config/database.js';
 import mssql from 'mssql';
 import uploadFileToS3 from '../utils/uploadFileToS3.js';
 
+const handleMultipleUploads = async files => {
+  if (!files || files.length === 0) return [];
+  return Promise.all(files.map(file => uploadFileToS3(file)));
+};
+
 const getCustomer = async (req, res) => {
   const { CustomerId } = req.body;
   try {
@@ -57,6 +62,7 @@ const getAllCustomers = async (req, res) => {
       .input('GuarantorPhoneNo', null)
       .input('CustomerEmail', null)
       .input('CustomerPhotoURL', null)
+      .input('CustomerDocumentURL', null)
       .input('CustomerRating', null)
       .input('CustomerIsBlocked', null)
       .input('CustomerIsCurrent', null)
@@ -193,10 +199,16 @@ const createCustomer = async (req, res, next) => {
     CustomerIsCurrent,
     CreatedBy,
   } = req.body;
-  const CustomerPhotoURLFile = req.file;
+  const { CustomerPhotoURL, CustomerDocumentURL } = req.files;
+  console.log('CustomerPhotoURLFile', req.files.CustomerDocumentURL);
   try {
     await transaction.begin();
-    const CustomerPhotoURL = await uploadFileToS3(CustomerPhotoURLFile);
+    const uploadedCustomerPhotos = await handleMultipleUploads(CustomerPhotoURL);
+    const uploadedCustomerDocuments = await handleMultipleUploads(CustomerDocumentURL);
+
+    const CustomerPhotoURLPath = uploadedCustomerPhotos[0] || null;
+    const CustomerDocumentURLPath = uploadedCustomerDocuments[0] || null;
+
     const request = new mssql.Request(transaction);
     const result = await request
       .input('Flag', 1)
@@ -226,7 +238,8 @@ const createCustomer = async (req, res, next) => {
       .input('GuarantorCity', GuarantorCity)
       .input('GuarantorPhoneNo', GuarantorPhoneNo)
       .input('CustomerEmail', CustomerEmail)
-      .input('CustomerPhotoURL', CustomerPhotoURL)
+      .input('CustomerPhotoURL', CustomerPhotoURLPath)
+      .input('CustomerDocumentURL', CustomerDocumentURLPath)
       .input('CustomerRating', CustomerRating)
       .input('CustomerIsBlocked', CustomerIsBlocked)
       .input('CustomerIsCurrent', CustomerIsCurrent)
@@ -279,11 +292,16 @@ const updateCustomer = async (req, res, next) => {
     CustomerIsCurrent,
     ModifiedBy,
   } = req.body;
-  const CustomerPhotoURLFile = req.file;
-
+  console.log('ol', req.files);
+  const { CustomerPhotoURL, CustomerDocumentURL } = req.files;
   try {
     await transaction.begin();
-    const CustomerPhotoURL = await uploadFileToS3(CustomerPhotoURLFile);
+    const uploadedCustomerPhotos = await handleMultipleUploads(CustomerPhotoURL);
+    const uploadedCustomerDocuments = await handleMultipleUploads(CustomerDocumentURL);
+
+    const CustomerPhotoURLPath = uploadedCustomerPhotos[0] || null;
+    const CustomerDocumentURLPath = uploadedCustomerDocuments[0] || null;
+
     const request = new mssql.Request(transaction);
     const result = await request
       .input('Flag', 2)
@@ -315,7 +333,8 @@ const updateCustomer = async (req, res, next) => {
       .input('GuarantorCity', GuarantorCity)
       .input('GuarantorPhoneNo', GuarantorPhoneNo)
       .input('CustomerEmail', CustomerEmail)
-      .input('CustomerPhotoURL', CustomerPhotoURL)
+      .input('CustomerPhotoURL', CustomerPhotoURLPath)
+      .input('CustomerDocumentURL', CustomerDocumentURLPath)
       .input('CustomerRating', CustomerRating)
       .input('CustomerIsBlocked', CustomerIsBlocked)
       .input('CustomerIsCurrent', CustomerIsCurrent)
@@ -371,6 +390,7 @@ const removeCustomer = async (req, res, next) => {
       .input('GuarantorPhoneNo', null)
       .input('CustomerEmail', null)
       .input('CustomerPhotoURL', null)
+      .input('CustomerDocumentURL', null)
       .input('CustomerRating', null)
       .input('CustomerIsBlocked', null)
       .input('CustomerIsCurrent', null)

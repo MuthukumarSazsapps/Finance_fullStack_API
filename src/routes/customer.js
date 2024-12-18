@@ -23,7 +23,10 @@ router.post(
   authenticateMiddleware,
   //minimumPermissionLevelRequired('Admin'),
   // subscriberValidation,
-  upload.single('CustomerPhotoURL'),
+  upload.fields([
+    { name: 'CustomerPhotoURL', maxCount: 1 }, // For image files
+    { name: 'CustomerDocumentURL', maxCount: 1 }, // For PDF files
+  ]),
   customer.createCustomer,
   log.addLog,
 );
@@ -31,7 +34,10 @@ router.put(
   '/update/:id',
   authenticateMiddleware,
   //minimumPermissionLevelRequired('Admin'),
-  upload.single('CustomerPhotoURL'),
+  upload.fields([
+    { name: 'CustomerPhotoURL', maxCount: 1 }, // For image files
+    { name: 'CustomerDocumentURL', maxCount: 1 }, // For PDF files
+  ]),
   customer.updateCustomer,
   log.addLog,
 );

@@ -46,6 +46,7 @@
 
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import dotenv from 'dotenv';
+import { Upload } from '@aws-sdk/lib-storage';
 
 dotenv.config();
 
@@ -58,19 +59,46 @@ const s3Client = new S3Client({
   },
 });
 
+// const uploadFileToS3 = async file => {
+//   try {
+//     const params = {
+//       Bucket: process.env.AWS_S3_BUCKET_NAME,
+//       Key: `uploads/${Date.now()}-${file.originalname}`, // Unique key for each file
+//       Body: file.buffer, // Directly use buffer
+//       ContentType: file.mimetype, // Set the correct MIME type
+//     };
+
+//     const command = new PutObjectCommand(params);
+//     await s3Client.send(command);
+
+//     const fileUrl = `https://${params.Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
+//     console.log('File uploaded successfully:', fileUrl);
+//     return fileUrl;
+//   } catch (error) {
+//     console.error('Error uploading file to S3:', error);
+//     throw error;
+//   }
+// };
+
 const uploadFileToS3 = async file => {
+  if (!file || !file.buffer || !file.originalname) {
+    throw new Error('Invalid file data');
+  }
+
   try {
-    const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: `uploads/${Date.now()}-${file.originalname}`, // Unique key for each file
-      Body: file.buffer, // Directly use buffer
-      ContentType: file.mimetype, // Set the correct MIME type
-    };
+    const uniqueKey = `uploads/${Date.now()}-${file.originalname}`;
+    const upload = new Upload({
+      client: s3Client,
+      params: {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: uniqueKey,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      },
+    });
 
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
-
-    const fileUrl = `https://${params.Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
+    await upload.done();
+    const fileUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueKey}`;
     console.log('File uploaded successfully:', fileUrl);
     return fileUrl;
   } catch (error) {
